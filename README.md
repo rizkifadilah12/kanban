@@ -8,17 +8,17 @@ API untuk aplikasi Kanban Board dengan sistem autentikasi JWT dan manajemen proj
 ### 1. Setup Database
 Pastikan MySQL berjalan dan buat database:
 ```sql
-CREATE DATABASE gin_api;
+CREATE DATABASE kanban_api;
 ```
 
 ### 2. Environment Variables
 Buat file `.env` di folder backend:
 ```env
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=admin123
-DB_NAME=gin_api
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
 ```
 
 ### 3. Run Application
