@@ -1,0 +1,256 @@
+basePath: /
+definitions:
+  models.AuthResponse:
+    properties:
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    type: object
+  models.ErrorResponse:
+    properties:
+      error:
+        example: Something went wrong
+        type: string
+    type: object
+  models.MessageResponse:
+    properties:
+      message:
+        example: Success
+        type: string
+    type: object
+  models.ProjectRequest:
+    properties:
+      name:
+        example: My Project
+        type: string
+    required:
+    - name
+    type: object
+  models.ProjectResponse:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: My Project
+        type: string
+      tasks:
+        items:
+          $ref: '#/definitions/models.TaskResponse'
+        type: array
+    type: object
+  models.TaskRequest:
+    properties:
+      project_id:
+        example: 1
+        type: integer
+      status:
+        example: todo
+        type: string
+      title:
+        example: Complete feature
+        type: string
+    required:
+    - project_id
+    - status
+    - title
+    type: object
+  models.TaskResponse:
+    properties:
+      id:
+        example: 1
+        type: integer
+      project_id:
+        example: 1
+        type: integer
+      status:
+        example: todo
+        type: string
+      title:
+        example: Complete feature
+        type: string
+    type: object
+  models.UserRequest:
+    properties:
+      password:
+        example: password123
+        type: string
+      username:
+        example: john_doe
+        type: string
+    required:
+    - password
+    - username
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: API untuk aplikasi Kanban Board
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Kanban API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login with username and password to get JWT token
+      parameters:
+      - description: User login data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Login user
+      tags:
+      - Authentication
+  /projects:
+    get:
+      description: Get all projects with their tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ProjectResponse'
+            type: array
+      summary: Get all projects
+      tags:
+      - Projects
+    post:
+      consumes:
+      - application/json
+      description: Create a new project with name
+      parameters:
+      - description: Project data
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProjectRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProjectResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Create a new project
+      tags:
+      - Projects
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with username and password
+      parameters:
+      - description: User registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Register a new user
+      tags:
+      - Authentication
+  /tasks:
+    post:
+      consumes:
+      - application/json
+      description: Create a new task for a project
+      parameters:
+      - description: Task data
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/models.TaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TaskResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Create a new task
+      tags:
+      - Tasks
+  /tasks/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update the status of a task by ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated task data
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/models.TaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TaskResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Update task status
+      tags:
+      - Tasks
+swagger: "2.0"
